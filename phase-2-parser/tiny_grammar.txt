@@ -1,0 +1,65 @@
+program        → PROGRAM IDENT SEMICOLON declarations BEGIN_PROGRAM stmts END_PROGRAM
+
+declarations   → declaration_list
+               | ε
+
+declaration_list → declaration declaration_list
+                 | declaration
+
+declaration    → IDENT COLON type SEMICOLON
+
+type           → INTEGER
+               | ARRAY L_PAREN NUMBER R_PAREN OF INTEGER
+
+stmts          → stmt stmts
+               | stmt
+
+stmt           → assignment_stmt
+               | if_stmt
+               | while_stmt
+               | read_stmt
+               | write_stmt
+               | ε
+
+assignment_stmt → IDENT ASSIGN expr SEMICOLON
+
+if_stmt        → IF cond THEN stmts ENDIF SEMICOLON
+               | IF cond THEN stmts ELSE stmts ENDIF SEMICOLON
+
+while_stmt     → WHILE cond LOOP stmts ENDLOOP SEMICOLON
+
+read_stmt      → READ var_list SEMICOLON
+
+write_stmt     → WRITE expr_list SEMICOLON
+
+var_list       → IDENT var_tail
+var_tail       → COMMA IDENT var_tail
+               | ε
+
+expr_list      → expr expr_tail
+expr_tail      → COMMA expr expr_tail
+               | ε
+
+cond           → expr EQ expr
+               | expr NEQ expr
+               | expr LT expr
+               | expr GT expr
+               | expr LTE expr
+               | expr GTE expr
+               | NOT cond
+               | cond AND cond
+               | cond OR cond
+               | L_PAREN cond R_PAREN
+
+expr           → expr ADD term
+               | expr SUB term
+               | term
+
+term           → term MULT factor
+               | term DIV factor
+               | factor
+
+factor         → L_PAREN expr R_PAREN
+               | NUMBER
+               | IDENT
+               
